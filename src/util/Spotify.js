@@ -1,8 +1,8 @@
 import SearchBar from "../Components/SearchBar/SearchBar";
 
 
-const clientId =  'a2b2ee8f40894c858aa8fd86f21ce094';//`${app.clientId}`;  //'a2b2ee8f40894c858aa8fd86f21ce094'; //removed when uploading to github; this ur api id for spotify
-const redirectUri = 'http://localhost:3000/';
+const clientId = process.env.SPOTIFY_API_KEY;
+const redirectUri = 'http://localhost:3001/';
 let accessToken;
 
 const Spotify = {
@@ -10,10 +10,11 @@ const Spotify = {
         if(accessToken) {
             return accessToken;
         }
-
+      
         //check for access token match
         const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
         const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
+        
 
         if (accessTokenMatch && expiresInMatch) {
             accessToken = accessTokenMatch[1];
@@ -23,6 +24,7 @@ const Spotify = {
             window.history.pushState('Access Token', null, '/');
             return accessToken;
         } else{
+            // console.log('hit else')
             const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
             window.location = accessUrl;
         }
